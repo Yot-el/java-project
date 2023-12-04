@@ -13,18 +13,20 @@ public class HomeController {
   private void startDraw(MouseEvent event) {
     double x = event.getX();
     double y = event.getY();
-    System.err.println("start draw");
+    canvasPane.startDraw(x, y);
   };
 
   @FXML
   private void draw(MouseEvent event) {
     double x = event.getX();
     double y = event.getY();
+    canvasPane.draw(x, y);
   };
 
   @FXML
   private void endDraw(MouseEvent event) {
     double x = event.getX();
     double y = event.getY();
+    canvasPane.endDraw(x, y);
   };
 }
