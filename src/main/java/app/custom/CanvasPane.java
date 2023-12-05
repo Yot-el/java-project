@@ -4,7 +4,9 @@ import app.custom.brushes.Instrument;
 import app.custom.brushes.Pen;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -26,7 +28,9 @@ public class CanvasPane extends Pane {
     int id = this.addLayer();
     this.setCurrentLayer(id);
     this.getLayer(id);
-    this.setCurrentInstrument("Pen");
+    this.setCurrentInstrument(new Pen());
+
+    this.setStyle("-fx-background-color: #FFFFFF;");
   }
 
   public void setSize(int size) {
@@ -77,6 +81,7 @@ public class CanvasPane extends Pane {
     this.currentInstrument.setSize(currentSize);
     this.currentInstrument.startDraw(x, y);
   }
+
   public void draw(double x, double y) {
     this.currentInstrument.draw(x, y);
   }
@@ -85,13 +90,21 @@ public class CanvasPane extends Pane {
     this.currentInstrument.endDraw(x, y);
   }
 
-  public void setCurrentInstrument(String instrument) {
-    switch (instrument) {
-      case "Pen": 
-        this.currentInstrument = new Pen();
-        break;
-      default:
-        throw new Error("No instrument found");
+  public void setCurrentInstrument(Instrument instrument) {
+    this.currentInstrument = instrument;
+  }
+
+  public void reset() {
+    ObservableList<Node> layers = this.getChildren();
+
+    for (Node nodeLayer : layers) {
+      Layer layer = (Layer) nodeLayer;
+
+      layer.getGraphicsContext2D().clearRect(0.0, 0.0, layer.getWidth(), layer.getHeight());
     }
+  }
+
+  public void save() {
+    WritableImage image = this.snapshot(new SnapshotParameters(), null);
   }
 }
