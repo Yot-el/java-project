@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.SaveController">
+<Label>Save current canvas?</Label>
+<Button fx:id="yesBtn" onMouseClicked="#saveCanvas">Yes</Button>
+<Button fx:id="noBtn" onMouseClicked="#resetCanvas">No</Button>
+</VBox>
