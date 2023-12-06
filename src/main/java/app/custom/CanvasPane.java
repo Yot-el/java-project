@@ -1,8 +1,15 @@
 package app.custom;
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
+
 import app.custom.brushes.Instrument;
 import app.custom.brushes.Pen;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
@@ -11,6 +18,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
+import javafx.stage.FileChooser;
 
 public class CanvasPane extends Pane {
   private int currentSize = 1;
@@ -25,9 +33,6 @@ public class CanvasPane extends Pane {
     this.setWidth(500);
     this.setHeight(500);
 
-    int id = this.addLayer();
-    this.setCurrentLayer(id);
-    this.getLayer(id);
     this.setCurrentInstrument(new Pen());
 
     this.setStyle("-fx-background-color: #FFFFFF;");
@@ -51,6 +56,10 @@ public class CanvasPane extends Pane {
     Layer newLayer = new Layer(this.getWidth(), this.getHeight());
     newLayer.setLayerId(this.layerIdsGenerator);
     this.layerIdsGenerator += 1;
+
+    newLayer.heightProperty().bind(this.heightProperty());
+    newLayer.widthProperty().bind(this.widthProperty());
+    
     this.getChildren().add(newLayer);
 
     return newLayer.getLayerId();
@@ -72,22 +81,48 @@ public class CanvasPane extends Pane {
     return null;
   }
 
-  public void deleteLayer(int id) {}
+  public void deleteLayer(int id) throws Exception {
+    if (id == this.currentLayer) {
+      if (this.getChildren().size() == 0) {
+        throw new Exception("Cannot delete the last layer");
+      }
+
+      throw new Exception("Please select another layer to be current before deleting");
+    }
+
+    Layer layer = this.getLayer(id);
+    this.getChildren().remove(layer);
+  }
 
   public void startDraw(double x, double y) {
-    //gc of current layer id
-    this.currentInstrument.setGraphicContext(this.getLayer(this.currentLayer));
-    this.currentInstrument.setColor(currentColor);
-    this.currentInstrument.setSize(currentSize);
-    this.currentInstrument.startDraw(x, y);
+    try {
+      //gc of current layer id
+      this.currentInstrument.setGraphicContext(this.getLayer(this.currentLayer));
+      this.currentInstrument.setColor(currentColor);
+      this.currentInstrument.setSize(currentSize);
+      this.currentInstrument.startDraw(x, y);
+    }
+    catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   public void draw(double x, double y) {
-    this.currentInstrument.draw(x, y);
+    try {
+      this.currentInstrument.draw(x, y);
+    }
+    catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   public void endDraw(double x, double y) {
-    this.currentInstrument.endDraw(x, y);
+    try {
+      this.currentInstrument.endDraw(x, y);
+    }
+    catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   public void setCurrentInstrument(Instrument instrument) {
@@ -105,6 +140,20 @@ public class CanvasPane extends Pane {
   }
 
   public void save() {
-    WritableImage image = this.snapshot(new SnapshotParameters(), null);
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
+    File file = fileChooser.showSaveDialog(null);
+
+    if (file != null) {
+      WritableImage image = this.snapshot(new SnapshotParameters(), null);
+
+      RenderedImage renderedImage = SwingFXUtils.fromFXImage(image, null);
+      try {
+        ImageIO.write(renderedImage, "png", file);
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
   }
 }

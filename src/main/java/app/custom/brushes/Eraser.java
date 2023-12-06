@@ -12,17 +12,17 @@ public class Eraser implements Instrument {
 
   @Override
   public void startDraw(double x, double y) {
-    this.gc.clearRect(x + size/2, y + size/2, size, size);
+    this.gc.clearRect(x - size/2, y - size/2, size, size);
   }
 
   @Override
   public void draw(double x, double y) {
-    this.gc.clearRect(x + size/2, y + size/2, size, size);
+    this.gc.clearRect(x - size/2, y - size/2, size, size);
   }
 
   @Override
   public void endDraw(double x, double y) {
-    this.gc.clearRect(x + size/2, y + size/2, size, size);
+    this.gc.clearRect(x - size/2, y - size/2, size, size);
   }
 
   @Override
