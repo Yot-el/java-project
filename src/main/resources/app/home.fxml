@@ -19,10 +19,13 @@
          <Menu fx:id="fileMenu" text="File">
             <MenuItem fx:id="newFileBtn" onAction="#showSaveDialog" text="New File"></MenuItem>
             <MenuItem fx:id="saveBtn" onAction="#saveCanvas" text="Save"></MenuItem>
+            <MenuItem fx:id="openBtn" onAction="#openFile" text="Open"></MenuItem>
          </Menu>
          <Menu fx:id="brushMenu" text="Instrument">
             <MenuItem fx:id="penBtn" onAction="#setBrush" text="Pen"></MenuItem>
             <MenuItem fx:id="eraserBtn" onAction="#setBrush" text="Eraser"></MenuItem>
+            <MenuItem fx:id="ovalBtn" onAction="#setBrush" text="Oval"></MenuItem>
+            <MenuItem fx:id="rectBtn" onAction="#setBrush" text="Rectangle"></MenuItem>
          </Menu>
       </MenuBar>
       <HBox>

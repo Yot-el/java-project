@@ -3,6 +3,8 @@ package app.custom;
 import java.io.IOException;
 
 import app.App;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
@@ -47,5 +49,11 @@ public class LayerControlPanel extends FlowPane {
 
   public void setCurrentLayer() {
     this.canvas.setCurrentLayer(this.id);
+  }
+
+  public void setLayerOpacity(ObservableValue<Number> ovn, Number before, Number after) {
+    double opacity = Math.round(after.doubleValue() * 100.0) / 100.0;
+
+    this.canvas.setLayerOpacity(this.id, opacity);
   }
 }
