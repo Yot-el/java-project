@@ -1,5 +1,6 @@
 package app.controllers;
 
+import java.io.File;
 import java.io.IOException;
 
 import app.App;
@@ -7,18 +8,24 @@ import app.custom.CanvasPane;
 import app.custom.LayerControlPanel;
 import app.custom.brushes.Eraser;
 import app.custom.brushes.Pen;
+import app.custom.brushes.figures.Oval;
+import app.custom.brushes.figures.Rectangle;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 public class HomeController {
@@ -28,11 +35,14 @@ public class HomeController {
   public MenuItem saveBtn;
   public MenuItem penBtn;
   public MenuItem eraserBtn;
+  public MenuItem ovalBtn;
+  public MenuItem rectBtn;
   public VBox layersControlsBox;
+  public Label currentLayerLabel;
 
   public void initialize() {
-    this.addLayer();
     HBox.setHgrow(this.canvasPane, Priority.ALWAYS);
+    this.addLayer();
   }
 
   @FXML
@@ -77,7 +87,24 @@ public class HomeController {
 
   @FXML
   private void saveCanvas() {
-    this.canvasPane.save();
+    try {
+      this.canvasPane.save();
+    }
+    catch (Exception e) {
+
+    }
+  }
+
+  @FXML
+  private void openFile() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Choose image");
+    fileChooser.getExtensionFilters().addAll(
+          new ExtensionFilter("Image Files", "*.png", "*.jpg"));
+    File selectedFile = fileChooser.showOpenDialog(null);
+    Image image = new Image(selectedFile.toURI().toString());
+
+    this.canvasPane.openImage(image);
   }
 
   @FXML
@@ -89,6 +116,12 @@ public class HomeController {
     }
     else if (source == eraserBtn) {
       canvasPane.setCurrentInstrument(new Eraser());
+    }
+    else if (source == ovalBtn) {
+      canvasPane.setCurrentInstrument(new Oval());
+    }
+    else if (source == rectBtn) {
+      canvasPane.setCurrentInstrument(new Rectangle());
     }
   }
 

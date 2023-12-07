@@ -16,7 +16,13 @@ public class SaveController {
 
   @FXML
   private void saveCanvas(MouseEvent e) {
-    this.canvas.save();
+    try {
+      this.canvas.save();
+    }
+    catch (Exception exception) {
+      return;
+    }
+
     this.resetCanvas(e);
   }
 

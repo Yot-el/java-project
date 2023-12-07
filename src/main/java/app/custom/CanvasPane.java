@@ -81,6 +81,11 @@ public class CanvasPane extends Pane {
     return null;
   }
 
+  public void setLayerOpacity(int id, double opacity) {
+    Layer layer = this.getLayer(id);
+    layer.setOpacity(opacity);
+  }
+
   public void deleteLayer(int id) throws Exception {
     if (id == this.currentLayer) {
       if (this.getChildren().size() == 0) {
@@ -129,6 +134,15 @@ public class CanvasPane extends Pane {
     this.currentInstrument = instrument;
   }
 
+  public void openImage(Image image) {
+    Layer layer = this.getLayer(this.currentLayer);
+
+    double x = (this.getWidth() - image.getWidth()) / 2;
+    double y = (this.getHeight() - image.getHeight()) / 2;
+
+    layer.getGraphicsContext2D().drawImage(image, x, y);
+  }
+
   public void reset() {
     ObservableList<Node> layers = this.getChildren();
 
@@ -139,10 +153,12 @@ public class CanvasPane extends Pane {
     }
   }
 
-  public void save() {
+  public void save() throws Exception {
     FileChooser fileChooser = new FileChooser();
     fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
     File file = fileChooser.showSaveDialog(null);
+
+    if (file == null) throw new Exception("No file selected");
 
     if (file != null) {
       WritableImage image = this.snapshot(new SnapshotParameters(), null);
